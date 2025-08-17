@@ -70,12 +70,12 @@ public class SlimeChunkDensity {
     }
 
     //生成二维数组
-    public static int[][] SlimeChunkMap(long worldSeed) {
-        int[][] arr = new int[6250][6250];
-        for(int Z = 0; Z < 6250; Z++) {
+    public static int[][] SlimeChunkMap(long worldSeed, int chunksX, int chunksZ) {
+        int[][] arr = new int[chunksZ][chunksX];
+        for(int Z = 0; Z < chunksZ; Z++) {
 //            System.out.println();
-            for(int X = 0; X < 6250; X++) {
-                if(isSlimeChunk(worldSeed, X - 3125, Z - 3125)){
+            for(int X = 0; X < chunksX; X++) {
+                if(isSlimeChunk(worldSeed, X - (chunksX / 2), Z - (chunksZ / 2))){
                     arr[Z][X] = 1;
                 }else {
                     arr[Z][X] = 0;
@@ -86,19 +86,61 @@ public class SlimeChunkDensity {
         return arr;
     }
 
+    //获取种子
+    public static long getSeed(Scanner sc) {
+        System.out.print("请输入世界种子：");
+        return sc.nextLong();
+    }
+
+    //获取大X
+    public static int getChunksX(Scanner sc) {
+        System.out.print("输入要搜索的整体长：");
+        int a = sc.nextInt();
+        return a + a;
+    }
+
+    //获取大Z
+    public static int getChunksZ(Scanner sc) {
+        System.out.print("输入要搜索的整体宽：");
+        int a = sc.nextInt();
+        return a + a;
+    }
+
+    //获取小x
+    public static int getChunksx(Scanner sc) {
+        System.out.print("输入要搜索小框长：");
+        return sc.nextInt();
+    }
+
+    //获取小z
+    public static int getChunksz(Scanner sc) {
+        System.out.print("输入要搜索小框宽：");
+        return sc.nextInt();
+    }
+
 
     public static void main(String[] args) {
-        long worldSeed = 2277284842347939655L;
-        int[][] arr = SlimeChunkMap(worldSeed);
+
+        Scanner sc = new Scanner(System.in);
+
+        long worldSeed = getSeed(sc);
+        int chunksX = getChunksX(sc);
+        int chunksZ = getChunksZ(sc);
+        int chunksx = getChunksx(sc);
+        int chunksz = getChunksz(sc);
+
+        System.out.println("若输入范围大，则运行时间会增加，请耐心等候。");
+
+        int[][] arr = SlimeChunkMap(worldSeed, chunksX, chunksZ);
         int slimechunknum;
         int maxslimechunknum = 0;
         int maxslimechunkX = 0;
         int maxslimechunkZ = 0;
-        for(int Z = 0; Z < 6234; Z++) {
-            for(int X = 0; X < 6234; X++) {
+        for(int Z = 0; Z < (chunksZ - chunksz); Z++) {
+            for(int X = 0; X < (chunksX - chunksx); X++) {
                 slimechunknum = 0;
-                for(int z = Z; z < Z + 16; z++) {
-                    for(int x = X; x < X + 16; x++) {
+                for(int z = Z; z < Z + chunksz; z++) {
+                    for(int x = X; x < X + chunksx; x++) {
                         if(arr[z][x] == 1) {
                             slimechunknum++;
                         }
@@ -112,8 +154,9 @@ public class SlimeChunkDensity {
             }
         }
 
+
         System.out.println("史莱姆数量" + maxslimechunknum);
-        System.out.println("区块坐标" + (maxslimechunkX - 3125) + "," + (maxslimechunkZ - 3125));
-        System.out.println("方块坐标" + ((maxslimechunkX - 3125) * 16) + "," + ((maxslimechunkZ - 3125) * 16));
+        System.out.println("区块坐标" + (maxslimechunkX - (chunksX / 2)) + "," + (maxslimechunkZ - (chunksZ / 2)));
+        System.out.println("方块坐标" + ((maxslimechunkX - (chunksX / 2)) * 16) + "," + ((maxslimechunkZ - (chunksZ / 2)) * 16));
     }
 }
