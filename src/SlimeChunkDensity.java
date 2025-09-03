@@ -56,9 +56,7 @@ public class SlimeChunkDensity {
 
 
     //史莱姆区块判断
-    public static boolean isSlimeChunk(long worldSeed,     // 世界种子，一个64位整数，可以通过/seed获取
-                                       int  chunkX,        // 区块X轴坐标，32位整数
-                                       int  chunkZ) {      // 区块Z轴坐标，32位整数
+    public static boolean isSlimeChunk(long worldSeed, int  chunkX, int  chunkZ) {
         Random rng = new Random(
                 worldSeed +
                         (long)(chunkX * chunkX * 4987142) +
